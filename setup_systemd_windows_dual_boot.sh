@@ -11,15 +11,17 @@ main() {
 	lsblk -o NAME,FSTYPE,SIZE,MOUNTPOINT
 	read efi_partition
 	if [ ! -d "$mountpoint" ]; then
+		echo "mounting $mountpoint"
 		sudo mkdir "$mountpoint"
 	fi
 	sudo mount "/dev/$efi_partition" "$mountpoint" || exit 1
 	sudo cp -r "$mountpoint/EFI/Microsoft" /boot/efi/EFI
 	local found_timeout=`sudo grep -E "timeout" "$loader_path"`
-	if [ -z found_timeout ]; then
+	if [ -z "$found_timeout" ]; then
 		echo "setting boot timeout to $timeout"
-		sudo echo "timeout $timeout" >> "$loader_path"
+		echo "timeout $timeout" | sudo tee -a "$loader_path"
 	fi
+	echo "unmounting $mountpoint"
 	sudo umount "$mountpoint"
 	sudo rm -rf "$mountpoint"
 }
