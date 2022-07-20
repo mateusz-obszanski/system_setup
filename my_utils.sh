@@ -1,9 +1,16 @@
-TRUE=0
-FALSE=1
+fexplorer() {
+	if [ -z "$@" ]; then
+		xdg-open .
+	else
+		xdg-open $@
+	fi
+}
 
 as_bool() {
-	local boolean_result=$TRUE;
-	`[ ${@} ]` || boolean_result=$FALSE;
+	local _true=0
+	local _false=1
+	local boolean_result=$_true;
+	`[ ${@} ]` || boolean_result=$_false;
 	echo $boolean_result;
 }
 
@@ -13,8 +20,8 @@ rootcheck() {
 
 # Tries to re-run the script in which has been called as the root user
 # Usage:
-# 	rootcheck_unsafe "${@}"
-rootcheck_rerun() {
+# 	_rootcheck_rerun "${@}"
+_rootcheck_rerun() {
 	# if not a root
 	if rootcheck; then
 		# re-enter the program, ask for the password (-k)
@@ -22,6 +29,8 @@ rootcheck_rerun() {
 		exit $?
 	fi
 }
+
+alias rootcheck_rerun='_rootcheck_rerun $@'
 
 # Exits if not run as the root user
 # Usage:
