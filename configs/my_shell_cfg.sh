@@ -14,24 +14,31 @@ _source_custom_utils() {
 }
 
 main() {
-	// Python
-	local python_dir="/usr/bin"
+	# Python
 	local python_major=3
 	local python_minor=10
 	local python_micro=5
-	local python_version="${python_major}.${python_minor}.${python_micro}"
-	local python_cmd="${python_dir}/python$python_version"
+	local python_version="${python_major}.${python_minor}"
+    local python_version_full="$python_version.$python_micro"
+	local python_dir="~/my/programs/Python-$python_version_full"
+	local python_cmd="${python_dir}/bin/python$python_version"
+	local ipython_cmd="$python_cmd -m IPython"
 
+	alias python="$python_cmd"
 	alias py="$python_cmd"
-	alias ipy="$python_cmd -m IPython"
+	alias ipython="$ipython_cmd"
+	alias ipy="$ipython_cmd"
 	alias pip="$python_cmd -m pip"
-	
-	alias shrug="¯\_(ツ)_/¯"
-	
-	_cfg_tilix_terminal
+
+	alias vim="nvim"
+
+	alias shrug="echo '¯\_(ツ)_/¯'"
+
+	# Tilix shouted about that but sourced file does not exist
+	# _cfg_tilix_terminal
 	_source_custom_utils
 	
-	export path="$path:~/my/programs/bin"
+	export PATH="$PATH:~/my/programs/bin"
 }
 
 main

@@ -8,7 +8,7 @@ main() {
 	fi
 
 	echo "copying './configs/my_shell_cfg.sh' to $cfg_target_dir"
-	
+
 	if [ -f "$cfg_target_dir/.zshrc" ]; then
 		echo "configuration file already there, skipping"
 	else
@@ -23,21 +23,22 @@ main() {
 			cp -f ./zshrc ~
 		fi
 	else
+		# no existing config template
 		echo "WARNING: no custom config, better make one and save as $cfg_template"
 		if [ ! -f ~/.zshrc ]; then
 			echo "ERROR: no ~/.zshrc file to modify, aborting"
 			exit 1
 		fi
-		
+
 		echo "Modifying already existing ~/.zshrc file"
 		echo "Adding sourcing of custom shell config"
 		echo "# My config (AUTOMATICALLY ADDED)\nsource \"$cfg_target_dir/my_shell_cfg.sh\"" \
 			>> ~/.zshrc
 		local plugins="extract fzf git pip python rust"
 		echo "Injecting plugins ($plugins)"
-		sed -iE "s/plugins=.*/plugins=($plugins)/"
+		sed -iE "s/^plugins=.*/plugins=($plugins)/" ~/.zshrc
 	fi
-	
+
 	echo "sourcing ~/.zshrc"
 	. ~/.zshrc
 }

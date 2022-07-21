@@ -1,2 +1,10 @@
-echo "TODO: create neovim config, place it in this directory, copy it to ~/my/configs and source it in ~/.zshrc"
-exit 1
+if [ ! -d ~/.config/nvim ]; then
+	mkdir ~/.config/nvim
+fi
+
+if [ ! -f ~/.config/nvim/init.vim ]; then
+	cp ./configs/neovim/init.vim ~/.config/nvim/
+else
+	echo "Found existing init.vim at ~/.config/nvim, skipping"
+fi
+
