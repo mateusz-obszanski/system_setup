@@ -18,6 +18,8 @@ main() {
 	./configure_neovim
 	echo "Installing Python..."
 	./install_python
+	echo "Installing other tools..."
+	./install_programs.sh
 	echo "Setting up custom zsh config..."
 	./setup_my_shell_cfg.sh
 	

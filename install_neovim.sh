@@ -8,6 +8,9 @@ main() {
 	sudo chmod ug+x ./nvim.appimage
 	mkdir -p "$target_dir"
 	mv ./nvim.appimage "$target_dir"
+	# if appimage causes problems, it might need to be extracted - see
+	# Neovim GitHub page
+	ln -s "$target_dir/nvim.appimage" "$target_dir/nvim"
 	echo "remember to add '$target_dir' to path"
 }
 
