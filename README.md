@@ -1,12 +1,12 @@
 # Fresh Pop OS setup
 
+author: Mateusz Obszanski
+email: matobszanski@gmail.com
+
+Sets up the system to use with zsh shell.
+
 run `./full_setup.sh`
 
 ## TODOs
-- move scripts to `scripts` directory
-- script arguments
-- fix sourcing my_utils.sh
-- replace `source` with `.` for somewhat shell compatibility
-- config file for full setup (maybe .env)
-- create .zshrc template in ./configs
-- add `set -e` or `set -o errexit` to each script to fail on the first error
+
+See: TODOs.md

@@ -1,4 +1,10 @@
+#!/usr/bin/zsh
+
+set -e
+
 main() {
+	set -e
+
 	local cfg_target_dir=~/my/configs
 	local cfg_template=./configs/.zshrc
 
@@ -33,7 +39,7 @@ main() {
 		echo "Modifying already existing ~/.zshrc file"
 		echo "Adding sourcing of custom shell config"
 		echo "# My config (AUTOMATICALLY ADDED)\nsource \"$cfg_target_dir/my_shell_cfg.sh\"" \
-			>> ~/.zshrc
+			>>~/.zshrc
 		local plugins="extract fzf git pip python rust"
 		echo "Injecting plugins ($plugins)"
 		sed -iE "s/^plugins=.*/plugins=($plugins)/" ~/.zshrc
@@ -44,4 +50,3 @@ main() {
 }
 
 main
-
