@@ -19,6 +19,8 @@ echo "Installing Neovim..."
 ./install_neovim.sh
 echo "Configuring Neovim..."
 ./configure_neovim
+echo "Configuring Git..."
+./configure_git.sh
 echo "Installing Python..."
 ./install_python
 echo "Installing other tools..."

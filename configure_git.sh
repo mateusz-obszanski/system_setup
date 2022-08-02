@@ -1,4 +1,9 @@
 set -e
 
-git config --global core.editor nvim
+alias gitcfg="git config --global"
+
+gitcfg core.editor nvim
+gitcfg pull.rebase false # merge on pull
+
+unalias gitcfg
 
