@@ -1,3 +1,6 @@
+" TODO here set primitive settings, write plugin installation and custom functions
+"   to lua files
+
 set nocompatible            " disable compatibility to old-time vi
 set showmatch               " show matching 
 set ignorecase              " case insensitive 

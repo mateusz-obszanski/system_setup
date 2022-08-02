@@ -34,11 +34,16 @@ main() {
 
 	alias shrug="echo '¯\_(ツ)_/¯'"
 
+    # For color output to work with less
+    alias ls="ls --color=always"
+    alias less="less -R"
+
+
 	# Tilix shouted about that but sourced file does not exist
 	# _cfg_tilix_terminal
 	_source_custom_utils
 	
-	export PATH="$PATH:~/my/programs/bin"
+	export PATH="$PATH:$HOME/my/programs/bin"
 }
 
 main

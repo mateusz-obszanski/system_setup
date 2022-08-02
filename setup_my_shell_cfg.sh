@@ -2,23 +2,37 @@
 
 set -e
 
+install_fonts() {
+  set -e
+  local this_dir=$(pwd)
+  git clone https://github.com/ryanoasis/nerd-fonts.git --depth 1
+  cd ./nerd-fonts
+  install.sh FiraCode
+  install.sh FiraMono
+  cd "$this_dir"
+  echo "remember to set the newly added font in the terminal settings"
+}
+
+# Args:
+# - this script's directory (dirname $0)
 main() {
 	set -e
 
 	local cfg_target_dir=~/my/configs
-	local cfg_template=./configs/.zshrc
+    local this_dir="$1"
+	local cfg_template="$this_dir/configs/.zshrc"
 
 	if [ ! -d "$cfg_target_dir" ]; then
 		echo "creating $cfg_target_dir directory"
 		mkdir -p "$cfg_target_dir"
 	fi
 
-	echo "copying './configs/my_shell_cfg.sh' to $cfg_target_dir"
+	echo "copying '$this_dir/configs/my_shell_cfg.sh' to '$cfg_target_dir'"
 
 	if [ -f "$cfg_target_dir/.zshrc" ]; then
 		echo "configuration file already there, skipping"
 	else
-		cp ./configs/my_shell_cfg.sh "$cfg_target_dir"
+		cp "$this_dir/configs/my_shell_cfg.sh" "$cfg_target_dir"
 		chmod ug+x "$cfg_target_dir/my_shell_cfg.sh"
 	fi
 
@@ -26,7 +40,7 @@ main() {
 		echo "copying custom .zshrc to $HOME directory"
 		if [ -f ~/.zshrc ]; then
 			echo "WARNING: the old ~/.zshrc will be replaced"
-			cp -f ./zshrc ~
+			cp -f "$this_dir/zshrc" ~
 		fi
 	else
 		# no existing config template
@@ -45,8 +59,11 @@ main() {
 		sed -iE "s/^plugins=.*/plugins=($plugins)/" ~/.zshrc
 	fi
 
+  echo "Installing fonts..."
+  install_fonts
+
 	echo "sourcing ~/.zshrc"
 	. ~/.zshrc
 }
 
-main
+main $(dirname $0)

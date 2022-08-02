@@ -1,3 +1,10 @@
+# Recipes:
+# to_multiline: '$(echo <someting> | tr -s "\n")'
+
+# Notes:
+# functions must set+e at the end if they set -e at the beginning,
+# otherwise using them makes e.g. tab-completion shutdown the terminal
+
 fexplorer() {
 	set -e
 
@@ -6,9 +13,28 @@ fexplorer() {
 	else
 		xdg-open $@
 	fi
+
+  set +e
 }
 
 alias fex=fexplorer
+
+catless() {
+  set -e
+
+  local filepath="$1"
+
+  if [ -z "$filepath" ]; then
+    # nothing to cat
+    exit 1
+  fi
+
+  cat "$filepath" | less
+
+  set +e
+}
+
+alias cls=catless
 
 as_bool() {
 	set -e
@@ -19,6 +45,8 @@ as_bool() {
 
 	$([ ${@} ]) || boolean_result=$_false
 	echo $boolean_result
+
+  set +e
 }
 
 rootcheck() {
@@ -37,6 +65,8 @@ _rootcheck_rerun() {
 		exec sudo -k "${0}" "${@}"
 		exit $?
 	fi
+
+  set +e
 }
 
 alias rootcheck_rerun='_rootcheck_rerun $@'
@@ -52,6 +82,8 @@ rootcheck_exit() {
 		echo "ERROR: You must run this script as the root user"
 		exit 1
 	fi
+
+  set +e
 }
 
 # Install from OS distribution repository
@@ -60,4 +92,43 @@ alias dupdate="sudo apt update"
 alias dupinstall="dupdate && dinstall"
 alias dupgrade="sudo apt upgrade -y"
 
-alias clean_utils_aliases="unalias dinstall dupdate dupinstall dupgrade clean_utils_aliases"
+alias to_multiline='tr -s "\n"'
+
+mapcmd() {
+  set -e
+
+  local f="$1"
+  shift
+
+  if [ "$1" = "--" ]; then
+    local args=$(echo "$2" | xargs)
+  else
+    local args=$@
+  fi
+
+  # multiline
+  for a in $(echo $args | to_multiline); do
+    "$f" "$a"
+  done
+
+  set +e
+}
+
+
+clean_utils_aliases() {
+  set -e
+
+  local to_unset=$(cat <<- EOF
+    dinstall dupdate dupinstall dupgrade
+EOF
+  )
+
+  to_unset=$(echo "$to_unset" | tr -s ' ')
+
+  mapcmd unalias -- $to_unset
+  # deregister this function by itself
+  unset -f clean_utils_aliases
+
+  set +e
+}
+
