@@ -31,6 +31,7 @@ main() {
 	alias pip="$python_cmd -m pip"
 
 	alias vim="nvim"
+  alias tree1="tree -L 1"
 
 	alias shrug="echo '¯\_(ツ)_/¯'"
 

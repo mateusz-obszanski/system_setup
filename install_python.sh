@@ -21,22 +21,43 @@ _install_python_modules() {
 
 }
 
+_install_poetry() {
+	local python_cmd="$1"
+	curl -sSL https://install.python-poetry.org | "$python_cmd" -
+}
+
+_install_pyenv() {
+	curl https://pyenv.run | $SHELL
+	echo "TODO add ~/.pyenv/bin to PATH permanently"
+}
+
 main() {
 	set -e
 
-	local python_version="3.10.5"
+	local python_version="3.10.7"
 	local download_url="https://www.python.org/ftp/python/$python_version/Python-$python_version.tar.xz"
 	local target_dir="$HOME/my/programs/Python-$python_version"
 	local starting_location=$(pwd)
 
 	dupinstall \
-		build-essential zlib1g-dev \
-		libncurses5-dev \
+		build-essential \
+		gdb \
+		lcov \
+		pkg-config \
+		libbz2-dev \
+		libffi-dev \
 		libgdbm-dev \
-		libnss3-dev \
+		libgdbm-compat-dev \
+		liblzma-dev \
+		libncurses5-dev \
+		libreadline6-dev \
+		libsqlite3-dev \
 		libssl-dev \
-		libreadline-dev \
-		libffi-dev curl
+		lzma \
+		lzma-dev \
+		tk-dev \
+		uuid-dev \
+		zlib1g-dev
 
 	curl -O "$download_url"
 	tar -xf "Python-$python_version.tar.xz"
@@ -46,12 +67,12 @@ main() {
 		# sudo apt install sqlite-devel # or libsqlite3-dev on some Debian-based systems
 		set -e
 
-		dupinstall libsqlite3-dev
 		./configure \
 			--enable-optimizations \
 			--enable-loadable-sqlite-extensions \
 			--prefix="$target_dir"
-		make
+
+		make -s
 		sudo make altinstall
 		rm "Python-$python_version.tar.xz"
 		sudo rm -rf "Python-$python_version"
@@ -66,6 +87,9 @@ main() {
 			exit $last_err_status
 		fi
 	}
+
+	_install_poetry
+	_install_pyenv
 }
 
 rootcheck_rerun
