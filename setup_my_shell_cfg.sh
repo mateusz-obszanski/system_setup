@@ -2,15 +2,29 @@
 
 set -e
 
+# Args:
+# - --cleanup
 install_fonts() {
-  set -e
-  local this_dir=$(pwd)
-  git clone https://github.com/ryanoasis/nerd-fonts.git --depth 1
-  cd ./nerd-fonts
-  install.sh FiraCode
-  install.sh FiraMono
-  cd "$this_dir"
-  echo "remember to set the newly added font in the terminal settings"
+	local this_dir=$(pwd)
+
+	if [ -d ./nerd-fonts ]; then
+		echo "skipping git clone - repository already exists"
+	else
+		git clone https://github.com/ryanoasis/nerd-fonts.git --depth 1
+	fi
+
+	cd ./nerd-fonts
+	git pull -p -f --depth=1
+	./install.sh FiraCode
+	./install.sh FiraMono
+
+	cd "$this_dir"
+	echo "remember to set the newly added font in the terminal settings"
+
+	if [ "$1" -eq "--cleanup" ]; then
+		echo "cleaning up the repository"
+		rm -rf ./nerd-fonts
+	fi
 }
 
 # Args:
@@ -19,7 +33,7 @@ main() {
 	set -e
 
 	local cfg_target_dir=~/my/configs
-    local this_dir="$1"
+	local this_dir="$1"
 	local cfg_template="$this_dir/configs/.zshrc"
 
 	if [ ! -d "$cfg_target_dir" ]; then
@@ -54,13 +68,13 @@ main() {
 		echo "Adding sourcing of custom shell config"
 		echo "# My config (AUTOMATICALLY ADDED)\nsource \"$cfg_target_dir/my_shell_cfg.sh\"" \
 			>>~/.zshrc
-		local plugins="extract fzf git pip python rust"
+		local plugins="extract fzf git pip python rust poetry"
 		echo "Injecting plugins ($plugins)"
 		sed -iE "s/^plugins=.*/plugins=($plugins)/" ~/.zshrc
 	fi
 
-  echo "Installing fonts..."
-  install_fonts
+	echo "Installing fonts..."
+	install_fonts
 
 	echo "sourcing ~/.zshrc"
 	. ~/.zshrc
