@@ -6,13 +6,13 @@
 # otherwise using them makes e.g. tab-completion shutdown the terminal
 
 fexplorer() {
-	set -e
+  set -e
 
-	if [ -z "$@" ]; then
-		xdg-open .
-	else
-		xdg-open $@
-	fi
+  if [ -z "$@" ]; then
+    xdg-open .
+  else
+    xdg-open $@
+  fi
 
   set +e
 }
@@ -37,34 +37,34 @@ catless() {
 alias cls=catless
 
 as_bool() {
-	set -e
+  set -e
 
-	local _true=0
-	local _false=1
-	local boolean_result=$_true
+  local _true=0
+  local _false=1
+  local boolean_result=$_true
 
-	$([ ${@} ]) || boolean_result=$_false
-	echo $boolean_result
+  $([ ${@} ]) || boolean_result=$_false
+  echo $boolean_result
 
   set +e
 }
 
 rootcheck() {
-	[ $(id -u) -eq 0 ] || false
+  [ $(id -u) -eq 0 ] || false
 }
 
 # Tries to re-run the script in which has been called as the root user
 # Usage:
 # 	_rootcheck_rerun "${@}"
 _rootcheck_rerun() {
-	set -e
+  set -e
 
-	# if not a root
-	if rootcheck; then
-		# re-enter the program, ask for the password (-k)
-		exec sudo -k "${0}" "${@}"
-		exit $?
-	fi
+  # if not a root
+  if rootcheck; then
+    # re-enter the program, ask for the password (-k)
+    exec sudo -k "${0}" "${@}"
+    exit $?
+  fi
 
   set +e
 }
@@ -75,13 +75,13 @@ alias rootcheck_rerun='_rootcheck_rerun $@'
 # Usage:
 # 	rootcheck
 rootcheck_exit() {
-	set -e
+  set -e
 
-	# if not a root
-	if rootcheck; then
-		echo "ERROR: You must run this script as the root user"
-		exit 1
-	fi
+  # if not a root
+  if rootcheck; then
+    echo "ERROR: You must run this script as the root user"
+    exit 1
+  fi
 
   set +e
 }
@@ -114,11 +114,11 @@ mapcmd() {
   set +e
 }
 
-
 clean_utils_aliases() {
   set -e
 
-  local to_unset=$(cat <<- EOF
+  local to_unset=$(
+    cat <<-EOF
     dinstall dupdate dupinstall dupgrade
 EOF
   )
@@ -132,3 +132,7 @@ EOF
   set +e
 }
 
+command_exists() {
+  local cmdname="$1"
+  [ -x "$cmdname" ]
+}
