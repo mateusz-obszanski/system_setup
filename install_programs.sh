@@ -9,6 +9,8 @@ rootcheck_rerun
 # Fuzzy finder for commandline and vim plugin
 dupinstall \
     fzf \
-    tree
+    tree \
+    cmake \
+    htop
 
 clean_utils_aliases

@@ -24,6 +24,9 @@ _install_python_modules() {
 _install_poetry() {
 	local python_cmd="$1"
 	curl -sSL https://install.python-poetry.org | "$python_cmd" -
+	echo "Configuring Poetry"
+	poetry config virtualenvs.prefer-active-python true
+	poetry config virtualenvs.in-project true
 }
 
 _install_pyenv() {

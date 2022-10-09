@@ -21,7 +21,7 @@ main() {
 	# Python
 	local python_major=3
 	local python_minor=10
-	local python_micro=5
+	local python_micro=7
 	local python_version="${python_major}.${python_minor}"
 	local python_version_full="$python_version.$python_micro"
 	local python_dir="~/my/programs/Python-$python_version_full"
