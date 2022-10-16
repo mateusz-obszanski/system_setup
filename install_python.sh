@@ -20,12 +20,15 @@ _install_python_modules() {
 }
 
 _install_poetry() {
-	if [ -x $(command -v poetry) ]; then
+	if [ ! -z $(command -v poetry) ]; then
 		echo "poetry already installed, skipping"
 	else
-		local python_cmd="$1"
-		curl -sSL https://install.python-poetry.org | "$python_cmd" -
+		curl -sSL https://install.python-poetry.org | python3 -
 	fi
+}
+
+_uninstall_poetry() {
+	curl -sSL https://install.python-poetry.org | python - --uninstall
 }
 
 _configure_poetry() {
@@ -36,7 +39,7 @@ _configure_poetry() {
 }
 
 _install_pyenv() {
-	if [ -x $(command -v pyenv) ]; then
+	if [ ! -z $(command -v pyenv) ]; then
 		echo "pyenv already installed, skipping"
 	else
 		curl https://pyenv.run | $SHELL
