@@ -20,18 +20,28 @@ _install_python_modules() {
 }
 
 _install_poetry() {
-	local python_cmd="$1"
-	curl -sSL https://install.python-poetry.org | "$python_cmd" -
+	if [ -x $(command -v poetry) ]; then
+		echo "poetry already installed, skipping"
+	else
+		local python_cmd="$1"
+		curl -sSL https://install.python-poetry.org | "$python_cmd" -
+	fi
 }
 
 _configure_poetry() {
 	poetry config virtualenvs.prefer-active-python true
-	poetry config virtualenvs.in-project true
+	# poetry config virtualenvs.in-project true
+	mkdir "$ZSH_CUSTOM/plugins/poetry"
+	poetry completions zsh >"$ZSH_CUSTOM/plugins/poetry/_poetry"
 }
 
 _install_pyenv() {
-	curl https://pyenv.run | $SHELL
-	echo "TODO add ~/.pyenv/bin to PATH permanently"
+	if [ -x $(command -v pyenv) ]; then
+		echo "pyenv already installed, skipping"
+	else
+		curl https://pyenv.run | $SHELL
+		echo "TODO add ~/.pyenv/bin to PATH permanently"
+	fi
 }
 
 _compile_python() {

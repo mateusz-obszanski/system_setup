@@ -108,5 +108,5 @@ EOF
 
 command_exists() {
   local cmdname="$1"
-  [ -x "$cmdname" ]
+  [ -x $(command -v "$cmdname") ]
 }
