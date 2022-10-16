@@ -5,23 +5,19 @@
 # functions must set+e at the end if they set -e at the beginning,
 # otherwise using them makes e.g. tab-completion shutdown the terminal
 
-fexplorer() {
-  set -e
+set -o errexit -o nounset
 
+fexplorer() {
   if [ -z "$@" ]; then
     xdg-open .
   else
     xdg-open $@
   fi
-
-  set +e
 }
 
 alias fex=fexplorer
 
 catless() {
-  set -e
-
   local filepath="$1"
 
   if [ -z "$filepath" ]; then
@@ -30,23 +26,17 @@ catless() {
   fi
 
   cat "$filepath" | less
-
-  set +e
 }
 
 alias cls=catless
 
 as_bool() {
-  set -e
-
   local _true=0
   local _false=1
   local boolean_result=$_true
 
   $([ ${@} ]) || boolean_result=$_false
   echo $boolean_result
-
-  set +e
 }
 
 rootcheck() {
@@ -57,16 +47,12 @@ rootcheck() {
 # Usage:
 # 	_rootcheck_rerun "${@}"
 _rootcheck_rerun() {
-  set -e
-
   # if not a root
   if rootcheck; then
     # re-enter the program, ask for the password (-k)
     exec sudo -k "${0}" "${@}"
     exit $?
   fi
-
-  set +e
 }
 
 alias rootcheck_rerun='_rootcheck_rerun $@'
@@ -75,15 +61,11 @@ alias rootcheck_rerun='_rootcheck_rerun $@'
 # Usage:
 # 	rootcheck
 rootcheck_exit() {
-  set -e
-
   # if not a root
   if rootcheck; then
     echo "ERROR: You must run this script as the root user"
     exit 1
   fi
-
-  set +e
 }
 
 # Install from OS distribution repository
@@ -95,8 +77,6 @@ alias dupgrade="sudo apt upgrade -y"
 alias to_multiline='tr -s "\n"'
 
 mapcmd() {
-  set -e
-
   local f="$1"
   shift
 
@@ -110,13 +90,9 @@ mapcmd() {
   for a in $(echo $args | to_multiline); do
     "$f" "$a"
   done
-
-  set +e
 }
 
 clean_utils_aliases() {
-  set -e
-
   local to_unset=$(
     cat <<-EOF
     dinstall dupdate dupinstall dupgrade
@@ -128,8 +104,6 @@ EOF
   mapcmd unalias -- $to_unset
   # deregister this function by itself
   unset -f clean_utils_aliases
-
-  set +e
 }
 
 command_exists() {

@@ -1,7 +1,5 @@
 #!/usr/bin/zsh
 
-set -e
-
 . ~/my/dev/shell/my_utils.sh
 
 # args:
@@ -24,7 +22,9 @@ _install_python_modules() {
 _install_poetry() {
 	local python_cmd="$1"
 	curl -sSL https://install.python-poetry.org | "$python_cmd" -
-	echo "Configuring Poetry"
+}
+
+_configure_poetry() {
 	poetry config virtualenvs.prefer-active-python true
 	poetry config virtualenvs.in-project true
 }
@@ -34,9 +34,7 @@ _install_pyenv() {
 	echo "TODO add ~/.pyenv/bin to PATH permanently"
 }
 
-main() {
-	set -e
-
+_compile_python() {
 	local python_version="3.10.7"
 	local download_url="https://www.python.org/ftp/python/$python_version/Python-$python_version.tar.xz"
 	local target_dir="$HOME/my/programs/Python-$python_version"
@@ -65,10 +63,11 @@ main() {
 	curl -O "$download_url"
 	tar -xf "Python-$python_version.tar.xz"
 	cd "Python-$python_version"
+
 	{ # try
 		# loadable sqlite because of import error
 		# sudo apt install sqlite-devel # or libsqlite3-dev on some Debian-based systems
-		set -e
+		set -e -u
 
 		./configure \
 			--enable-optimizations \
@@ -84,15 +83,26 @@ main() {
 		local last_err_status=$!
 	}
 	{ # finally
-		set -e
+		set -e -u
 		cd "$starting_location"
 		if [ -n $last_err_status ]; then
 			exit $last_err_status
 		fi
 	}
+}
 
-	_install_poetry
+# requires pyenv
+_install_latest_python() {
+	pyenv update && pyenv install -s 3:latest
+}
+
+main() {
+	set -o errexit -o nounset
+
 	_install_pyenv
+	_install_latest_python
+	_install_poetry
+	_configure_poetry
 }
 
 rootcheck_rerun

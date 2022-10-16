@@ -1,6 +1,6 @@
 #!/usr/bin/zsh
 
-set -e
+set -o errexit -o nounset
 
 # Args:
 # - --cleanup
